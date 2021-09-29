@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>XHR 객체 직접사용 - GET방식</title>
+</head>
+<body>
+	<button type="button" onclick="reqList();">조회</button>
+	<button type="button" onclick="delList();">삭제</button>
+	<p id="resp"></p>
+	<script>
+		function reqList() {
+			// XHR 객체 생성
+			var xhr = new XMLHTTpRequest();
+			
+			// 데이터가 수신되면 XHR 객체에 Callback 함수 등록
+			xhr.onreadystatechange = function() {
+				console.log(xhr.readyState);
+				// 전송상태 0=초기화 1=로딩중 2=로딩됨 3=대화상태 4=전송완료
+				if(xhr.readyState == 4) {
+					// 에러상태 200이면 에러없음, 404 페이지 찾을수 없음.등등)
+					if(xhr.status == 200) {
+						// 전송된 데이터 텍스트로 받음
+						var data = xhr.responseText;
+						console.log(data);
+						// dom객체를 이용해서 전송된 데이터를 화면에 표출
+						document.getElementById("resp").innerHTML = data;
+					}
+				}
+			};
+			// XHR객체 오픈
+			// 메소드방식, 주소, 통기방식(비통기=true 통기=false)
+		 	xhr.open("POST","/contact/add.do",true);
+			//XHR객체 헤더에 content-type 설정
+			xhr.setRequstHeader("Content-type","application/x-www-form-urlencoded");
+			//encodedURIComponent(문자열) : 문자열을 유니코드로 치환
+			var name = encodedURIComponent("유시진");		
+			var tel = encodedURIComponent("010-1111-2222");		
+			var address = encodedURIComponent("서초구");	''
+			
+			// 전송할 파라미터들을 문자열로 변환
+			var reqStr = "name=" + name + "&tel=" + tel + "&address" + address; 
+			
+			console.log("reqStr=========" + reqStr);
+			// XHR 객체 전송
+			xhr.send(reqStr);
+		}
+		
+		function delList() {
+			// dom객체를 이용해서 화면에 표출될 내용 삭제
+			document.getElementById("resp").innerHTML = "";
+		}
+	</script>
+</body>
+</html>
